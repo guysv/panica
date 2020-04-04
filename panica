@@ -1,0 +1,23 @@
+#!/bin/sh
+
+PANICA_SESSION=panica
+IRC_DIR="$HOME/.panica/irc"
+
+if [ -f "$HOME/.panica/config" ]; then
+    . "$HOME/.panica/config"
+fi
+
+mkdir -p "$IRC_DIR"
+cd "$IRC_DIR"
+
+tmux ls 2> /dev/null | grep "^$PANICA_SESSION" > /dev/null && \
+    echo "Panica is already running in session \"$PANICA_SESSION\"" && \
+    exit 1
+
+if [ -z "$TMUX" ]; then
+    tmux new-session -s "$PANICA_SESSION" -n 'jjd' 'panica-run'
+else
+    tmux new-session -d -s "$PANICA_SESSION" -n 'jjd' 'panica-run'
+    echo 'Panica is running, attach with tmux using:'
+    echo "    tmux a -t \"$PANICA_SESSION\""
+fi

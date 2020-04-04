@@ -1,0 +1,46 @@
+#!/bin/sh
+
+PANICA_SESSION=panica
+IRC_DIR="$HOME/.panica/irc"
+
+if [ -f "$HOME/.panica/config" ]; then
+    . "$HOME/.panica/config"
+fi
+
+
+if [ -f "$HOME/.panica/serverconf.d/$IRC_HOST" ]; then
+    . "$HOME/.panica/serverconf.d/$IRC_HOST" 
+fi
+
+logfile="$IRC_DIR/$IRC_HOST/channels/$IRC_WHERE.log"
+
+# on ignore list
+for channel in "$IRC_ROOMS_IGNORE"; do
+    test "$channel" = "$IRC_WHERE" && exit
+done
+
+# alread open
+if tmux list-windows -F '#{window_name}' | grep "$IRC_WHERE@$IRC_HOST"; then
+    exit
+fi
+
+tmux new-window \
+	-e "IRC_LOGFILE=$logfile" \
+	-t "$PANICA_SESSION:" \
+	-n "$IRC_WHERE@$IRC_HOST" \
+	-- sh -c 'tail -fn+0 "$IRC_LOGFILE" | jjp'
+
+
+tmux list-windows -F '#{window_name} #{window_index}' | \
+	grep "^$IRC_WHERE@$IRC_HOST" | \
+	while read m i; do
+    tmux split-window \
+	-e "room=$IRC_WHERE" \
+	-e "IRC_HOST=$IRC_HOST" \
+	-e "IRC_DIR=$IRC_DIR" \
+	-t "$PANICA_SESSION:$i" \
+	-l 1 \
+	-- sh -c 'panica-input "$room"'
+    break
+done
+

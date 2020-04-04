@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ -f "$HOME/.panica/serverconf.d/$IRC_HOST" ]; then
+    . "$HOME/.panica/serverconf.d/$IRC_HOST" 
+fi
+
+if [ ! -z "$IRC_NICKSERV_PASS" ]; then
+    echo "msg NickServ IDENTIFY $IRC_NICKSERV_PASS" > "$IRC_DIR/$IRC_HOST/in"
+fi
+
+for channel in "$IRC_ROOMS_AUTOJOIN"; do
+    echo "join $channel" > "$IRC_DIR/$IRC_HOST/in"
+done

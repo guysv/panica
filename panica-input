@@ -1,0 +1,26 @@
+#!/bin/sh -e
+#
+# Send stdin to a channel.
+#
+# Usage: panica-input <channel>
+#
+# Commands can be executed by prefixing them with a '/'.  Typing two
+# slashes allows sending of messages with a slash in the beginning.
+#
+# Ripped off jj/extra/jji
+
+: "${1:?Missing channel argument}"
+
+fifo="$IRC_DIR/$IRC_HOST/in"
+[ -p "$fifo" ] && [ -w "$fifo" ] ||
+	exit 1
+
+prompt() { [ -t 0 ] && printf '\033[0m%s\033[37m@%s\033[0m> ' "$1" "$IRC_HOST" >&2 || :; }
+
+while prompt "$1" && IFS= read -r line || [ -n "$line" ]; do
+	case $line in
+		/[!/]*) line=${line#?} ;;
+		*) line="msg $1 $line" ;;
+	esac
+	printf %s\\n "$line"
+done >"$fifo"

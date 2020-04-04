@@ -1,0 +1,15 @@
+#!/bin/sh
+
+PANICA_SESSION=panica
+IRC_DIR="$HOME/.panica/irc"
+
+if [ -f "$HOME/.panica/config" ]; then
+    . "$HOME/.panica/config"
+fi
+
+tmux list-windows -F '#{window_name} #{window_index}' | \
+	grep "^$IRC_WHERE@$IRC_HOST" | \
+	while read m i; do
+    tmux kill-window -t "$PANICA_SESSION:$i"
+    break
+done
