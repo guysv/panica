@@ -28,7 +28,7 @@ tmux new-window \
 	-e "IRC_LOGFILE=$logfile" \
 	-t "$PANICA_SESSION:" \
 	-n "$IRC_WHERE@$IRC_HOST" \
-	-- sh -c 'tail -fn+0 "$IRC_LOGFILE" | jjp'
+	-- sh -c 'tail -fn 1000 "$IRC_LOGFILE" | jjp'
 
 
 tmux list-windows -F '#{window_name} #{window_index}' | \
