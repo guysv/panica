@@ -4,10 +4,6 @@ if [ -f "$IRC_HOST_CONF" ]; then
     . "$IRC_HOST_CONF"
 fi
 
-if [ ! -z "$IRC_NICKSERV_PASS" ]; then
-    echo "msg NickServ IDENTIFY $IRC_NICKSERV_PASS" > "$IRC_DIR/$IRC_HOST/in"
+if [ -z "$IRC_NICKSERV_PASS" ]; then
+    echo "join $(echo -n "$IRC_ROOMS_AUTOJOIN" | tr "$IFS" ",")" > "$IRC_DIR/$IRC_HOST/in"
 fi
-
-for channel in "$IRC_ROOMS_AUTOJOIN"; do
-    echo "join $channel" > "$IRC_DIR/$IRC_HOST/in"
-done

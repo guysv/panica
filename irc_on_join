@@ -14,6 +14,15 @@ fi
 
 logfile="$IRC_DIR/$IRC_HOST/channels/$IRC_WHERE.log"
 
+# nickserv login
+if [ ! -z "$IRC_NICKSERV_PASS" ] && \
+	[ "$IRC_WHERE" = "nickserv" ]; then
+    tail -fn 0 "$IRC_DIR/$IRC_HOST/channels/nickserv.log" | \
+	    grep -m 1 -E "^[0-9]+ <NickServ>n You are now identified for " &&
+	    echo "join $(echo -n "$IRC_ROOMS_AUTOJOIN" | tr "$IFS" ",")" > "$IRC_DIR/$IRC_HOST/in" &
+    echo "raw PRIVMSG NickServ :IDENTIFY $IRC_NICK $IRC_NICKSERV_PASS" > "$IRC_DIR/$IRC_HOST/in"
+fi
+
 # on ignore list
 for channel in "$IRC_ROOMS_IGNORE"; do
     test "$channel" = "$IRC_WHERE" && exit
