@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ -f "$HOME/.panica/serverconf.d/$IRC_HOST" ]; then
-    . "$HOME/.panica/serverconf.d/$IRC_HOST" 
+if [ -f "$IRC_HOST_CONF" ]; then
+    . "$IRC_HOST_CONF"
 fi
 
 if [ ! -z "$IRC_NICKSERV_PASS" ]; then

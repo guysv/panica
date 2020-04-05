@@ -8,8 +8,8 @@ if [ -f "$HOME/.panica/config" ]; then
 fi
 
 
-if [ -f "$HOME/.panica/serverconf.d/$IRC_HOST" ]; then
-    . "$HOME/.panica/serverconf.d/$IRC_HOST" 
+if [ -f "$IRC_HOST_CONF" ]; then
+    . "$IRC_HOST_CONF"
 fi
 
 logfile="$IRC_DIR/$IRC_HOST/channels/$IRC_WHERE.log"
