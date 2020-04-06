@@ -44,12 +44,12 @@ tmux list-windows -F '#{window_name} #{window_index}' | \
 	grep "^$IRC_WHERE@$IRC_HOST" | \
 	while read m i; do
     tmux split-window \
-	-e "room=$IRC_WHERE" \
+	-e "IRC_WHERE=$IRC_WHERE" \
 	-e "IRC_HOST=$IRC_HOST" \
 	-e "IRC_DIR=$IRC_DIR" \
 	-t "$PANICA_SESSION:$i" \
 	-l 1 \
-	-- sh -c 'panica-input "$room"'
+	-- sh -c "${IRC_INPUT:-panica-input}"
     break
 done
 

@@ -9,19 +9,19 @@
 #
 # Ripped off jj/extra/jji
 
-: "${1:?Missing channel argument}"
+channel="${IRC_WHERE:?Missing IRC_WHERE variable}"
 
 fifo="$IRC_DIR/$IRC_HOST/in"
 [ -p "$fifo" ] && [ -w "$fifo" ] ||
 	exit 1
 
-prompt() { [ -t 0 ] && printf '\033[0m%s\033[0m> ' "$1" >&2 || :; }
+prompt() { [ -t 0 ] && printf '\033[0m%s\033[0m> ' "$channel" >&2 || :; }
 
-while prompt "$1" && IFS= read -r line || [ -n "$line" ]; do
+while prompt "$channel" && IFS= read -r line || [ -n "$line" ]; do
 	case $line in
-		/part) line="${line#?} $1" ;;
+		/part) line="${line#?} $channel" ;;
 		/[!/]*) line=${line#?} ;;
-		*) line="msg $1 $line" ;;
+		*) line="msg $channel $line" ;;
 	esac
 	printf %s\\n "$line"
 done >"$fifo"
