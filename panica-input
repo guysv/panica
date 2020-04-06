@@ -19,6 +19,7 @@ prompt() { [ -t 0 ] && printf '\033[0m%s\033[0m> ' "$1" >&2 || :; }
 
 while prompt "$1" && IFS= read -r line || [ -n "$line" ]; do
 	case $line in
+		/part) line="${line#?} $1" ;;
 		/[!/]*) line=${line#?} ;;
 		*) line="msg $1 $line" ;;
 	esac
