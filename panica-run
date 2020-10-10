@@ -1,17 +1,18 @@
 #!/bin/sh
 
 PANICA_SESSION=panica
-IRC_DIR="$HOME/.panica/irc"
+PANICA_DIR="$HOME/.panica"
+IRC_DIR="$PANICA_DIR/irc"
 
 IRC_DAEMON=jjd
 
-if [ -f "$HOME/.panica/config" ]; then
-    . "$HOME/.panica/config"
+if [ -f "$PANICA_DIR/config" ]; then
+    . "$PANICA_DIR/config"
 fi
 
 export IRC_DAEMON
 
-find "$HOME/.panica/serverconf.d" -maxdepth 1 -type f | xargs -P0 -L1 sh -c \
+find "$PANICA_DIR/serverconf.d" -maxdepth 1 -type f | xargs -P0 -L1 sh -c \
     'IRC_HOST="$(basename $0)"; . "$0"; export IRC_HOST_CONF="$0"; export IRC_HOST; export IRC_NICK; export IRC_PORT; export IRC_DIR; while true; do sleep 3; eval "$IRC_DAEMON"; done' \
 
 while true; do sleep 60; done

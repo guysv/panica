@@ -1,10 +1,11 @@
 #!/bin/sh
 
 PANICA_SESSION=panica
-IRC_DIR="$HOME/.panica/irc"
+PANICA_DIR="$HOME/.panica"
+IRC_DIR="$PANICA_DIR/irc"
 
-if [ -f "$HOME/.panica/config" ]; then
-    . "$HOME/.panica/config"
+if [ -f "$PANICA_DIR/config" ]; then
+    . "$PANICA_DIR/config"
 fi
 
 mkdir -p "$IRC_DIR"
